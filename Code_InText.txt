@@ -1,0 +1,401 @@
+import mysql.connector as sql
+conn = sql.connect(host="localhost",user="root",passwd="2002",database="dbms_proj")
+ 
+if conn.is_connected():
+    print("Successfully Connected")
+
+import random as r
+
+# ****************every passenger has a unique passenger ID*****************
+#pnr is a 6 digit random integer -------------
+#payment id is a 4 digit random number
+#seat num is a 2 digit num
+#food id is a random 3 digit num
+print("Welcome :)")
+def menu():
+    print("*********************************************")
+    print("1.Input Passenger Details: ")  
+    print("2.Input Airlines Details: ")
+    print("3.input Source Detials: ")
+    print("4.Input Destination Detials: ")
+    print("5.Input Ticket Detials: ")
+    print("6.Input Payment Detials: ")
+    print("7.Input Food Details: ")
+    print("8.Display Flight Details/Status: ")
+    print("9.Show the Available Flights for the Journey: ")
+    print("10.Book A Ticket: ")
+    print("11.Cancel A Ticket: ")
+    print("Press 0 to EXIT :) ")
+    print("*********************************************")
+
+
+menu()
+
+#------------------------------------------ PASSENGER Details------------------------------------------------------------------------
+def add_pass():
+    c1=conn.cursor()
+    lst=[]
+    passenger_id=input("Enter Your Own Unique Passenger ID: ")
+    lst.append(passenger_id)
+    f_name=input("Enter Your First Name: ")
+    lst.append(f_name)
+    l_name=input("Enter Your Last Name: ")
+    lst.append(l_name)
+    phnum=input("Enter Passenger's Phone Number: ")
+    lst.append(phnum)
+    age=input("Enter Passenger's Age: ")
+    lst.append(age)
+    address=input("Enter Passenger's Adderss: ")
+    lst.append(address)
+    email=input("Enter Passenger's Email ID: ")
+    lst.append(email)
+    aadhar_num=input("Enter Passenger's Aadhar Number: ")
+    lst.append(aadhar_num)
+    #pas=(lst)
+    sql="INSERT INTO passenger(passenger_id,f_name,l_name,phnum,age,address,email,aadhar_num) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"
+    pas=(passenger_id,f_name,l_name,phnum,age,address,email,aadhar_num)
+    c1.execute(sql,pas)
+    conn.commit()
+    print("New Record Added :)")
+
+#------------------------------------------ AIRLINES Details----------------------------------------------------------------
+
+def airline_details():
+    c1=conn.cursor()
+    airline_id=input("Enter the Airline ID: ")
+    airline_name=input("Enter Airline Name: ")
+    type_aircraft=input("Enter The Aircraft Type: ")
+    doj=input("Enter the Date of Journey in \"YYYT-MM-DD\" format")
+    #sear_num is seat_num
+    sear_num=input("Enter Your Seat Number: ")
+    price=input("Enter The Ticket Cost: ")
+    passenger_id=input("Enter Your unique Passenger ID: ")
+
+    sql="insert into airline(airline_id,airline_name,type_aircraft,doj,sear_num,price,passenger_id) VALUES(%s,%s,%s,%s,%s,%s,%s)"
+    pas=(airline_id,airline_name,type_aircraft,doj,sear_num,price,passenger_id)
+    c1.execute(sql,pas)
+    conn.commit()
+    print("New Record For Airlines Has been Successully Added :)")
+
+#------------------------------------------ SOURCE Details---------------------------------------------------------------
+
+def source_details():
+    c1=conn.cursor()
+    name_source=input("Enter The Source Name: ")
+    airport_id=input("Enter the Unique Airport ID: ")
+    airport_name=input("Enter the Airport Name: ")
+    passenger_id=input("Enter Your Unique Passenger ID: ")
+
+    sql="insert into sourse(name_source,airport_id,airport_name,passenger_id) VALUES(%s,%s,%s,%s)"
+    pas=(name_source,airport_id,airport_name,passenger_id)
+    c1.execute(sql,pas)
+    conn.commit()
+    print("New Record for Source Details has been Created Successfully")
+
+#------------------------------------------ DESTINATION Details-----------------------------------------------------------------
+
+def destination_details():
+    c1=conn.cursor()
+    name_destn=input("Enter the Destination Name: ")
+    airport_id=input("Enter the Unique Airport ID: ")
+    airport_name=input("Enter the Airport Name: ")
+    passenger_id=input("Enter Your Unique Passenger ID: ")
+    
+    sql="insert into destination(name_source,airport_id,airport_name,passenger_id) VALUES(%s,%s,%s,%s)"
+    pas=(name_destn,airport_id,airport_name,passenger_id)
+    c1.execute(sql,pas)
+    conn.commit()
+    print("New Record for Destination Details has been Created Successfully")
+
+#------------------------------------------ TICKET Details------------------------------------------------------  
+
+def ticket_details():
+    c1=conn.cursor()
+    pnr=input("Enter the Unique PNR Code: ")
+    name_passenger=input("Enter Passenger Name: ")
+    airline_name=input("Enter the Prefferred Airline Name: ")
+    duration=input("Enter the Travel Duration: ")
+    seat_num=input("Enter Seat Number: ")
+    amt=input("Enter the Ticket Fare: ")
+    doj=input("Enter the Date of Journey in YYYY-MM-DD format: ")
+    destination_name=input("Enter the Destination Name: ")
+    source_name=input("Enter the Source Name: ")
+    flight_id=input("Enter the Flight ID: ")
+    payment_id=input("Enter the Payment ID: ")
+
+    sql="insert into ticket(pnr,name_passenger,airline_name,duration,seat_num,amt,doj,destination_name,source_name,flight_id,payment_id) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    pas=(pnr,name_passenger,airline_name,duration,seat_num,amt,doj,destination_name,source_name,flight_id,payment_id)
+    c1.execute(sql,pas)
+    conn.commit()
+    print("New Record for Ticket Details has been Created Successfully")
+
+#------------------------------------------ PAYMENTS Details------------------------------------------------------------------------
+
+def payment_details():
+    c1=conn.cursor()
+    payment_id=input("Enter the payments ID: ")
+    method=input("Enter the Method of Payment: ")
+    passenger_id=input("Enter the Unique Passenger ID: ")
+    coupon_id=input("Enter the Coupon ID (if you have any) else enter \"0\": ")
+    
+    sql="insert into payments(payment_id,method,passenger_id,coupon_id) values(%s,%s,%s,%s)"
+    pas=(payment_id,method,passenger_id,coupon_id)
+    c1.execute(sql,pas)
+    conn.commit()
+    print("New Record for Payment Details has been Created Successfully")
+
+#------------------------------------------  DISCOUNT Details-----------------------------------------------------------------------
+
+def discount_details():
+    c1=conn.cursor()
+    coupon_id=input("Enter the Coupon ID (if you have any) else enter \"0\": ")
+    price=input("Enter the Ticket Fare: ")
+    passenger_id=input("Enter the Unique Passenger ID: ")
+
+    sql="insert into discount(coupon_id,price,passenger_id) values(%s,%s,%s)"
+    pas=(coupon_id,price,passenger_id)
+    c1.execute(sql,pas)
+    conn.commit()
+    print("New Record for Discounts Details has been Created Successfully")
+
+#------------------------------------------ FOOD Details----------------------------------------------------------------------- 
+
+def food_details():
+    c1=conn.cursor()
+    food_id=input("Enter Unique Food ID: ")
+    food_name=input("Enter the Name of the Food: ")
+    quantity=input("Enter the Quantity of Food available: ")
+    airline_id=input("Enter the Unique Airline ID: ")
+
+    sql="insert into food(food_id,food_name,quantity,airline_id) values(%s,%s,%s,%s)"
+    pas=(food_id,food_name,quantity,airline_id)
+    c1.execute(sql,pas)
+    conn.commit()
+    print("New Record for Food Details has been Created Successfully")
+
+#/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#------------------------------------------ Flight STATUS-----------------------------------------------------------------------
+
+def flight_status():
+    c1=conn.cursor()
+    id=input("enter the airline id to view the flight status: ")
+    #sql="create or replace view view_flight_status as select current_status,airline_id from flight_status where airline_id=%s;"
+    sql_2="select * from flight_status where airline_id=%s"
+    id=(id,)
+    c1.execute(sql_2,id)
+    print("The Current Flight Location is: ")
+    result_my=c1.fetchall()
+    for i in result_my:
+        print(*i)
+
+#***************************************************************************************************************************************************************************
+#---------------------------------------Filters-------------------------------------------------------------------------------
+def filters(filter,passenger_id,name_source,name_destn,doj):
+    c1=conn.cursor()
+    # if(filter==1):
+    #     sqll="select * from available_flights where name_source=%s and name_destn=%s and doj=%s and order by departure asc"
+    # elif(filter==2):
+    #     sqll="select * from available_flights where name_source=%s and name_destn=%s and doj=%s and order by departure desc"
+    if(filter==1):
+        sqll="select * from available_flights where name_source=%s and name_destn=%s and doj=%s order by duration asc"
+    elif(filter==2):
+        sqll="select * from available_flights where name_source=%s and name_destn=%s and doj=%s order by duration desc"
+    elif(filter==3):
+        sqll="select * from available_flights where name_source=%s and name_destn=%s and doj=%s order by amt asc"
+    elif(filter==4):
+        sqll="select * from available_flights where name_source=%s and name_destn=%s and doj=%s order by amt desc"
+    pas=(name_source,name_destn,doj)
+    c1.execute(sqll,pas)
+    print("The Available Flights are: ")
+    #print("pass_id\tflight_num\tflight_name\tsource\t destination\tduration\tamount\tjourney_date")
+    result_my=c1.fetchall()
+    for i in result_my:
+        print(*i)
+
+#---------------------------------------Tickets availablity Display------------------------------------------------------------------------
+def ticket_availability():
+    c1=conn.cursor()
+    passenger_id=input("Enter Your Unique Passenger ID: ")
+    name_source=input("From: ")
+    name_destn=input("To: ")
+    doj=input("Enter The Date of journey in YYYY-MM-DD Format: ")
+    filter=int(input("Do you want to apply Filters for The Search?\n1.Sort by Duration Early First\n2.Sort by Duration Late First\n=3.Sort by Cost Cheap First\n4.Sort by Cost Costly First\n7.Press \"0\" for NO Filters: "))
+  
+    if(filter!=0):
+        filters(filter,passenger_id,name_source,name_destn,doj)
+    else:
+        sql="select * from available_flights where name_source=%s and name_destn=%s and doj=%s"
+        pas=(name_source,name_destn,doj)
+        c1.execute(sql,pas)
+        print("The available Flights are: ")
+        #print("pass_id\tflight_num\tflight_name\tsource\tdestination\tduration\tamount\tjourney_date")
+        result_my=c1.fetchall()
+        for i in result_my:
+            print(*i)
+#***********************************************************************************************************************************************************************
+
+
+#***********************************************************************************************************************************************************************
+#-------------------------------------------- allow user to book ticket -------------------------------------------------
+def payment(passenger_id,cost,name,airline_id,airline_name,name_source,name_destn,doj):
+    c1=conn.cursor()
+    #payment_id=input("Enter The Payment ID: ")
+    payment_id=r.randrange(1000,9999)
+    if(3000<=cost<=5000):
+        print("######## Congratulations, Your are Eligible For a Discount of 5% ########")
+        cost=cost-(cost*0.05)
+        print("Final Cost to be Paid is: ",cost)
+    if(5000<=cost<=10000):  
+        print("######## Congratulations, Your are Eligible For a Discount of 10% ########")
+        cost=cost-(cost*0.1)
+        print("Final Cost to be Paid is: ",cost)
+
+    method=int(input("\n1.For UPI/BHIM\n2.For Credit Card\n3.For Debit Card\n4.GPay:\nSelect Payment Method: "))
+    ch=1
+    while(ch==1):
+        if(method==1 or method==4):
+            upi=input("Enter Your UPI/BHIM ID: ")
+            ch=0
+        elif method==2:
+            card_num=input("Enter The Card Number: ")
+            card_name=input("Enter Card Holder Name: ")
+            exp_date=input("Enter The Expiry Year and Month of the Card: ")
+            pin=input("Enter the CVV Number: ")
+            ch=0
+        elif method==3:
+            card_num=input("Enter The Card Number: ")
+            card_name=input("Enter Card Holder Name: ")
+            exp_date=input("Enter The Expiry Year and Month of the Card: ")
+            pin=input("Enter the CVV Number: ")
+            ch=0
+        else:
+            print("\nEnter Proper Input ")
+            ch=1
+    #Final ticket
+    #insert into ticket
+    print("Your Ticket Has been Booked Successfully\n")
+    print("*********************Your Ticket Is:*******************************\n")
+    pnr=r.randrange(100000,999999)
+    seat_num=r.randrange(1,99)
+    sql_3="insert into ticket (pnr,name_passenger,airline_name,seat_num,amt,doj,destination_name,source_name,flight_id,passenger_id) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    pas_3=(pnr,name,airline_name,seat_num,cost,doj,name_destn,name_source,airline_id,passenger_id)
+    c1.execute(sql_3,pas_3)
+    conn.commit()
+    sql_4="select * from ticket where passenger_id=%s"
+    pas_4=(passenger_id,)
+    c1.execute(sql_4,pas_4)
+    result_my=c1.fetchall()
+    for i in result_my:
+        print(*i)
+    print("\n")
+
+def booking():
+    c1=conn.cursor()
+    passenger_id=input("Enter Your Unique Passenger ID: ")
+    name=input("Enter Passenger Name: ")
+    name_source=input("From: ")
+    name_destn=input("To: ")
+    doj=input("Enter The Date of journey in YYYY-MM-DD Format: ")
+    sql_1="select * from available_flights where name_source=%s and name_destn=%s and doj=%s"
+    pas=(name_source,name_destn,doj)
+    c1.execute(sql_1,pas)
+    myresult=c1.fetchall()
+    for x in myresult:
+        print(*x)
+    airline_id=input("Enter Your Desired Flight Number: ")
+    airline_name=input("Enter The Opted Airline Name: ")
+    sql_2="select amt from available_flights where airplane_id=%s"
+    pas=(airline_id,)
+    c1.execute(sql_2,pas)
+    result_my=c1.fetchall()
+    for i in result_my:
+        #print(i)
+        cost=i
+    print("The Cost Of The Ticket is: ",cost[0])
+    
+    #FOOD
+    n=int(input("Do You Want To Choose a Meal for Your Journey?\nSelect \n1.For Yes\n2.For No:\n"))
+    if(n==1):
+        sql_1="select * from food"
+        c1.execute(sql_1,)
+        result_my=c1.fetchall()
+        for i in result_my:
+            print(*i)       
+        food_id=input("Enter the Food ID: ")
+        sql_2="select price from food where food_id=%s"
+        pas_2=(food_id,)
+        c1.execute(sql_2,pas_2)
+        result_my=c1.fetchall()
+
+        for i in result_my:
+            costt=i
+        print("The Cost Of The Food is: ",costt[0])
+        final_cost=cost[0]+costt[0]
+    else:
+        final_cost=cost[0]
+    print("The Total Cost is: ",final_cost)    
+    payment(passenger_id,final_cost,name,airline_id,airline_name,name_source,name_destn,doj)
+    
+#***********************************************************************************************************************************************************************
+
+def cancellation():
+    c1=conn.cursor()
+    passenger_id=input("Enter Your Passenger ID: ")
+    sql="select * from ticket where passenger_id=%s"
+    pas=(passenger_id,)
+    c1.execute(sql,pas)
+    myresult = c1.fetchall()
+    for x in myresult:
+        print(*x)
+
+    flight_id=input("Enter The Flight ID to Cancel Your Ticket: ")
+
+    sql="select amt from ticket where passenger_id=%s and flight_id=%s"
+    pas=(passenger_id,flight_id)
+    c1.execute(sql,pas)
+    cost=0
+    result_my=c1.fetchall()
+    for i in result_my:
+        costt=i
+    cost=costt[0]+0
+    cost=cost-(cost*0.5)
+    print("Your Refund Amount is: ",cost)
+
+    sql="delete from ticket where passenger_id=%s and flight_id=%s"
+    pas=(passenger_id,flight_id)
+    c1.execute(sql,pas)
+    conn.commit()
+    print("######### Your Ticket has Been Cancelled ##########")
+
+    
+#--------------------------------------------------- INPUTS -------------------------------------------------
+ch=1
+while(ch!=0):
+    opt=""
+    ch=1
+    opt=int(input("enter any option: "))
+    if opt==1:
+        add_pass()
+    elif opt==2:
+        airline_details()
+    elif opt==3:
+        source_details()
+    elif opt==4:
+        destination_details()
+    elif opt==5:
+        ticket_details()
+    elif opt==6:
+        payment_details()
+    elif opt==7:
+        food_details()
+    elif opt==8:
+        flight_status()
+    elif opt==9:
+        ticket_availability()
+    elif opt==10:
+        booking()
+    elif opt==11:
+        cancellation()
+    elif opt==0:
+        ch=0
